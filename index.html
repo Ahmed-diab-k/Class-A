@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunbuster DISCO Series | Solar Heating Technology & ROI Calculator</title>
+    
+    <style>
+        /* ============================================
+           🎨 CSS STRUCTURE (DESIGN SYSTEM)
+           ============================================ */
+        
+        :root {
+            /* Colors */
+            --primary: #1a5276;
+            --primary-dark: #154360;
+            --primary-light: #2e86c1;
+            --secondary: #e67e22;
+            --accent: #28b463;
+            --environment: #17a589;
+            --dark: #2c3e50;
+            --light: #f8f9f9;
+            --gray: #7f8c8d;
+            --light-gray: #ecf0f1;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --info: #3498db;
+            
+            /* Typography */
+            --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --fs-xs: 0.75rem;
+            --fs-sm: 0.875rem;
+            --fs-base: 1rem;
+            --fs-lg: 1.125rem;
+            --fs-xl: 1.25rem;
+            --fs-2xl: 1.5rem;
+            --fs-3xl: 2rem;
+            --fs-4xl: 2.5rem;
+            
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --space-3xl: 4rem;
+            
+            /* Shadows & Radius */
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 16px rgba(0,0,0,0.15);
+            --shadow-xl: 0 12px 24px rgba(0,0,0,0.18);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+            
+            /* Transitions */
+            --transition-fast: 0.2s ease;
+            --transition-base: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            
+            /* Z-index layers */
+            --z-base: 1;
+            --z-dropdown: 10;
+            --z-sticky: 100;
+            --z-modal: 1000;
+        }
+        
+        /* ============================================
+           B) BASE STYLES & UTILITIES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: var(--font-main);
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+        }
+        
+        .section {
+            min-height: 100vh;
+            padding: var(--space-3xl) 0;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: var(--space-lg);
+            color: var(--primary-dark);
+        }
+        
+        h1 { font-size: var(--fs-4xl); }
+        h2 { 
+            font-size: var(--fs-3xl);
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: var(--space-sm);
+            display: inline-block;
+        }
+        h3 { font-size: var(--fs-2xl); }
+        h4 { font-size: var(--fs-xl); }
+        
+        .subtitle {
+            font-size: var(--fs-xl);
+            color: var(--gray);
+            margin-bottom: var(--space-xl);
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: var(--space-md) var(--space-xl);
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: var(--fs-base);
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition-base);
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+        .text-primary { color: var(--primary); }
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-environment { color: var(--environment); }
+        
+        .mt-1 { margin-top: var(--space-sm); }
+        .mt-2 { margin-top: var(--space-md); }
+        .mt-3 { margin-top: var(--space-lg); }
+        .mt-4 { margin-top: var(--space-xl); }
+        .mb-1 { margin-bottom: var(--space-sm); }
+        .mb-2 { margin-bottom: var(--space-md); }
+        .mb-3 { margin-bottom: var(--space-lg); }
+        .mb-4 { margin-bottom: var(--space-xl); }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        
+        /* ============================================
+           C) COMPONENT-BASED CSS
+           ============================================ */
+        
+        /* Card Components */
+        .card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-base);
+            height: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .card-title {
+            font-size: var(--fs-xl);
+            color: var(--primary);
+            margin-bottom: var(--space-md);
+        }
+        
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-light);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-md);
+        }
+        
+        /* Grid Systems */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-xl);
+            margin-top: var(--space-xl);
+        }
+        
+        .comparison-split {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-xl);
+            margin-top: var(--space-xl);
+        }
+        
+        /* Tables */
+        .scope-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--space-xl) 0;
+            box-shadow: var(--shadow-sm);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        
+        .scope-table th {
+            background: var(--primary);
+            color: white;
+            padding: var(--space-md);
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .scope-table td {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .scope-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .check, .cross {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+            font-size: var(--fs-sm);
+        }
+        
+        .check {
+            background: var(--success);
+            color: white;
+        }
+        
+        .cross {
+            background: var(--danger);
+            color: white;
+        }
+        
+        /* Visual Components */
+        .bar-group {
+            margin: var(--space-lg) 0;
+        }
+        
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-xs);
+            font-size: var(--fs-sm);
+            color: var(--gray);
+        }
+        
+        .bar-bg {
+            height: 30px;
+            background: var(--light-gray);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: var(--radius-sm);
+            transition: width 1.5s var(--transition-base);
+            position: relative;
+        }
+        
+        .bar-fill.competitor {
+            background: linear-gradient(90deg, var(--gray), #95a5a6);
+        }
+        
+        .bar-fill.environment {
+            background: linear-gradient(90deg, var(--environment), #48c9b0);
+        }
+        
+        .viz-box {
+            background: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .viz-value {
+            font-size: var(--fs-3xl);
+            font-weight: bold;
+            color: var(--primary);
+            margin: var(--space-sm) 0;
+        }
+        
+        /* Feature List Component */
+        .feature-list {
+            margin: var(--space-lg) 0;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: var(--space-md);
+            padding: var(--space-sm);
+            border-radius: var(--radius-sm);
+            background: #f8f9fa;
+            transition: var(--transition-base);
+        }
+        
+        .feature-item:hover {
+            background: #e8f4fc;
+            transform: translateX(5px);
+        }
+        
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--space-md);
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        
+        .feature-icon.success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .feature-icon.danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        /* ============================================
+           ROI CALCULATOR SPECIFIC COMPONENTS
+           ============================================ */
+        
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: var(--space-xl);
+            margin-top: var(--space-xl);
+        }
+        
+        @media (max-width: 992px) {
+            .calculator-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-panel {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .input-group {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: var(--space-sm);
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: var(--space-md);
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-md);
+            font-size: var(--fs-base);
+            transition: var(--transition-base);
+        }
+        
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 82, 118, 0.1);
+        }
+        
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--space-xl) 0;
+            box-shadow: var(--shadow-sm);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            padding: var(--space-lg);
+            text-align: center;
+            font-weight: 600;
+            font-size: var(--fs-lg);
+        }
+        
+        .comparison-table td {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--light-gray);
+            text-align: center;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .comparison-table .highlight {
+            background: #e8f4fc;
+            font-weight: 600;
+        }
+        
+        .comparison-table .sunbuster-col {
+            border-left: 4px solid var(--primary);
+        }
+        
+        .comparison-table .collector-col {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .comparison-table .electric-col {
+            border-left: 4px solid var(--danger);
+        }
+        
+        /* Results Cards */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-xl) 0;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+        
+        .result-card.sunbuster {
+            border-top: 4px solid var(--primary);
+        }
+        
+        .result-card.collector {
+            border-top: 4px solid var(--warning);
+        }
+        
+        .result-card.electric {
+            border-top: 4px solid var(--danger);
+        }
+        
+        .result-value {
+            font-size: var(--fs-3xl);
+            font-weight: bold;
+            color: var(--primary);
+            margin: var(--space-md) 0;
+        }
+        
+        .result-label {
+            color: var(--gray);
+            font-size: var(--fs-sm);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* CO₂ Emissions Display */
+        .co2-display {
+            background: #e8f6f3;
+            border-left: 4px solid var(--environment);
+            padding: var(--space-xl);
+            margin: var(--space-xl) 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+        
+        .co2-value {
+            font-size: var(--fs-4xl);
+            font-weight: bold;
+            color: var(--environment);
+            margin: var(--space-md) 0;
+        }
+        
+        /* Executive Summary */
+        .executive-summary {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-top: var(--space-xl);
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .summary-point {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: var(--space-lg);
+            padding: var(--space-md);
+            background: #f8f9fa;
+            border-radius: var(--radius-md);
+        }
+        
+        .summary-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--space-md);
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        
+        /* ============================================
+           D) ANIMATION LAYER
+           ============================================ */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s var(--transition-base), transform 0.8s var(--transition-base);
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* Navigation Dots */
+        .nav-dots {
+            position: fixed;
+            right: var(--space-lg);
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: var(--z-sticky);
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: var(--gray);
+            border-radius: var(--radius-full);
+            margin: var(--space-md) 0;
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+        
+        .dot.active {
+            background: var(--primary);
+            transform: scale(1.3);
+        }
+        
+        /* Hero Section Special */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+        }
+        
+        .hero h1, .hero h2, .hero h3 {
+            color: white;
+            border-color: var(--secondary);
+        }
+        
+        .hero .subtitle {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        /* Environment Section */
+        .environment-section {
+            background: linear-gradient(135deg, #e8f6f3 0%, #d1f2eb 100%);
+        }
+        
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            :root {
+                --fs-4xl: 2rem;
+                --fs-3xl: 1.75rem;
+                --fs-2xl: 1.5rem;
+                --fs-xl: 1.25rem;
+            }
+            
+            .section {
+                padding: var(--space-2xl) 0;
+            }
+            
+            .nav-dots {
+                display: none;
+            }
+            
+            .comparison-table {
+                font-size: var(--fs-sm);
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: var(--space-sm);
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculator-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-split {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         NAVIGATION DOTS
+         ============================================ -->
+    <div class="nav-dots">
+        <div class="dot active" data-section="1"></div>
+        <div class="dot" data-section="2"></div>
+        <div class="dot" data-section="3"></div>
+        <div class="dot" data-section="4"></div>
+        <div class="dot" data-section="5"></div>
+        <div class="dot" data-section="6"></div>
+        <div class="dot" data-section="7"></div>
+        <div class="dot" data-section="8"></div>
+        <div class="dot" data-section="9"></div>
+        <div class="dot" data-section="10"></div>
+        <div class="dot" data-section="11"></div>
+        <div class="dot" data-section="12"></div>
+        <div class="dot" data-section="13"></div>
+        <div class="dot" data-section="14"></div>
+    </div>
+
+    <!-- ============================================
+         SECTION 1: HERO
+         ============================================ -->
+    <section class="section hero" id="section-1">
+        <div class="container">
+            <div class="fade-in">
+                <h1>Sunbuster DISCO Series</h1>
+                <p class="subtitle">Superior Solar Heating Technology with Proven ROI</p>
+                <p>Italian-engineered direct solar accumulation system offering maintenance-free corrosion protection, 65% energy savings, and rapid payback for hospitality applications.</p>
+                <div class="mt-3">
+                    <a href="#section-11" class="btn">ROI Calculator</a>
+                    <a href="#section-3" class="btn btn-outline ml-2">Technical Specifications</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 2: PRODUCT PORTFOLIO
+         ============================================ -->
+    <section class="section" id="section-2">
+        <div class="container">
+            <h2>Product Portfolio</h2>
+            <p class="subtitle">High-performance solar water heating solutions</p>
+            
+            <div class="cards-grid fade-in">
+                <div class="card">
+                    <div class="icon-box">L200</div>
+                    <h3 class="card-title">DISCOSOL L 200</h3>
+                    <p><strong>Capacity:</strong> 200 Liters</p>
+                    <p><strong>Recovery Time:</strong> 5h 50min (45°C)</p>
+                    <p><strong>Night Heat Loss:</strong> 5°C</p>
+                    <p><strong>Investment:</strong> €1,925 - €2,050</p>
+                </div>
+                
+                <div class="card">
+                    <div class="icon-box">L135</div>
+                    <h3 class="card-title">DISCOTERM L 135</h3>
+                    <p><strong>Capacity:</strong> 135 Liters</p>
+                    <p><strong>Recovery Time:</strong> 4 hours (45°C)</p>
+                    <p><strong>Night Heat Loss:</strong> 7°C</p>
+                    <p><strong>Investment:</strong> €1,795 - €1,940</p>
+                </div>
+                
+                <div class="card">
+                    <div class="icon-box">VS</div>
+                    <h3 class="card-title">Competitive Analysis</h3>
+                    <p><strong>Traditional Electric:</strong> 50L, 2-year warranty</p>
+                    <p><strong>Solar Collector:</strong> 125L, annual €100+ maintenance</p>
+                    <p><strong>Energy Consumption:</strong> 3-7x higher operational costs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 3: SYSTEM OVERVIEW
+         ============================================ -->
+    <section class="section" id="section-3">
+        <div class="container">
+            <h2>System Overview</h2>
+            <p class="subtitle">Direct vs. Indirect Heating Principles</p>
+            
+            <div class="fade-in">
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon success">✔</div>
+                        <div>
+                            <strong>Sunbuster Heating Principle:</strong> Direct heating accumulation system where solar energy acts directly on the water storage.
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon danger">✖</div>
+                        <div>
+                            <strong>Solar Collector Heating Principle:</strong> Indirect heating principle; heat is transferred via water from the collector to the storage tank.
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon danger">✖</div>
+                        <div>
+                            <strong>Traditional Electric Heating Principle:</strong> Direct electrical heating via an immersion element.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cards-grid mt-3">
+                    <div class="card">
+                        <h4 class="card-title">Energy Source</h4>
+                        <p><span class="check">✓</span> Sunbuster: Clean solar with 1.2 kW backup</p>
+                        <p><span class="cross">✖</span> Collector: Solar with 3.5 kW backup</p>
+                        <p><span class="cross">✖</span> Electric: 100% electricity (1.5 kW/hr)</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4 class="card-title">Installation Footprint</h4>
+                        <p><span class="check">✓</span> Sunbuster: Compact 1090 × 1090 mm</p>
+                        <p><span class="cross">✖</span> Collector: Large 1440 × 1490 mm</p>
+                        <p>Traditional: Standard indoor installation</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4 class="card-title">Target Application</h4>
+                        <p>Hospitality hot water production</p>
+                        <p>Domestic residential use</p>
+                        <p>Professional commercial facilities</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 4: TECHNICAL COMPARISON
+         ============================================ -->
+    <section class="section" id="section-4">
+        <div class="container">
+            <h2>Technical Comparison</h2>
+            <p class="subtitle">Superior materials and engineering specifications</p>
+            
+            <div class="fade-in">
+                <table class="scope-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Sunbuster</th>
+                            <th>Solar Collector</th>
+                            <th>Traditional Electric</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Tank Material</strong></td>
+                            <td><span class="check">✓</span> Glass-lined carbon steel (round form)</td>
+                            <td>Thick steel with enamel powder coating</td>
+                            <td>Steel with enamel polish</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Insulation</strong></td>
+                            <td><span class="check">✓</span> 45 kg/m³ PU, 30mm thick</td>
+                            <td>Not Specified</td>
+                            <td>Not Specified</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Heating Method</strong></td>
+                            <td><span class="check">✓</span> Direct solar accumulation</td>
+                            <td><span class="cross">✖</span> Indirect</td>
+                            <td>Direct electrical</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Backup Power</strong></td>
+                            <td><span class="check">✓</span> 1.2 kW efficient</td>
+                            <td><span class="cross">✖</span> 3.5 kW high-consumption</td>
+                            <td>1.5 kW constant</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Freeze Protection</strong></td>
+                            <td><span class="check">✓</span> Round tank eliminates risk</td>
+                            <td><span class="cross">✖</span> High breakage risk</td>
+                            <td>N/A</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 5: ENERGY EFFICIENCY
+         ============================================ -->
+    <section class="section" id="section-5">
+        <div class="container">
+            <h2>Energy & Efficiency</h2>
+            <p class="subtitle">Quantifiable performance advantages</p>
+            
+            <div class="fade-in">
+                <div class="bar-group">
+                    <div class="bar-label">
+                        <span>Backup Power Efficiency</span>
+                        <span><strong>65% Less Power Required</strong></span>
+                    </div>
+                    <div class="bar-bg">
+                        <div class="bar-fill" data-width="34">1.2 kW</div>
+                        <div class="bar-fill competitor" data-width="100" style="position: absolute; top: 0; left: 0; opacity: 0.3">3.5 kW</div>
+                    </div>
+                    <div class="text-center mt-1">
+                        <span>Sunbuster: 1.2 kW</span> | 
+                        <span>Collector: 3.5 kW (291% more power)</span>
+                    </div>
+                </div>
+                
+                <div class="cards-grid mt-3">
+                    <div class="card">
+                        <h4 class="card-title">Night Heat Loss</h4>
+                        <div class="viz-value">5-7°C</div>
+                        <p>Industry-leading thermal retention</p>
+                        <p>L200: 5°C | L135: 7°C</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4 class="card-title">Greenhouse Effect</h4>
+                        <p><span class="check">✓</span> Double PMMA dome for internal reflection</p>
+                        <p><span class="check">✓</span> Maximizes temperature increase</p>
+                        <p><span class="cross">✖</span> Competitors: No dome technology</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4 class="card-title">Recovery Time</h4>
+                        <div class="viz-value">4-5.8h</div>
+                        <p>To reach 45°C from cold</p>
+                        <p>L135: 4h | L200: 5.8h</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 6: INSTALLATION & MAINTENANCE
+         ============================================ -->
+    <section class="section" id="section-6">
+        <div class="container">
+            <h2>Installation & Maintenance</h2>
+            <p class="subtitle">Simplified deployment with long-term reliability</p>
+            
+            <div class="fade-in">
+                <div class="comparison-split">
+                    <div class="card">
+                        <h3 class="card-title">Sunbuster Advantages</h3>
+                        <div class="feature-item">
+                            <div class="feature-icon success">✔</div>
+                            <div>Easy assembly with standard galvanized steel brackets</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon success">✔</div>
+                            <div>Compact dimensions save roof space</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon success">✔</div>
+                            <div>Zero annual maintenance - no sacrificial parts</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon success">✔</div>
+                            <div>Designed for 15+ years operation</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Competitor Challenges</h3>
+                        <div class="feature-item">
+                            <div class="feature-icon danger">✖</div>
+                            <div>Complex installation due to larger dimensions</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon danger">✖</div>
+                            <div>Indirect plumbing requirements</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon danger">✖</div>
+                            <div>Mandatory magnesium column replacement every 12 months</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon danger">✖</div>
+                            <div>€100+ annual recurring maintenance costs</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 7: RELIABILITY & DURABILITY
+         ============================================ -->
+    <section class="section" id="section-7">
+        <div class="container">
+            <h2>Reliability & Durability</h2>
+            <p class="subtitle">Engineered for demanding environments</p>
+            
+            <div class="fade-in">
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3 class="card-title">High Wind Performance</h3>
+                        <p><span class="check">✓</span> Engineered to reduce "sail effect" by 60%</p>
+                        <p><span class="check">✓</span> Protects building structural integrity</p>
+                        <p><span class="cross">✖</span> Traditional collectors: High wind resistance</p>
+                        <div class="viz-value mt-2">60%</div>
+                        <p>Reduced wind resistance</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Saline Environments</h3>
+                        <p><span class="check">✓</span> "Best solution for Anti-corrosion"</p>
+                        <p><span class="check">✓</span> Glass-lined/double enamel treatment</p>
+                        <p><span class="cross">✖</span> Magnesium rods corrode faster in salt water</p>
+                        <div class="viz-value mt-2">0</div>
+                        <p>Annual corrosion maintenance</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Freeze Risk Management</h3>
+                        <p><span class="check">✓</span> Round tank eliminates breakage risk</p>
+                        <p><span class="check">✓</span> Natural freeze protection</p>
+                        <p><span class="cross">✖</span> Solar collectors: High breakage risk</p>
+                        <div class="viz-value mt-2">0%</div>
+                        <p>Freeze failure rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 8: COMMERCIAL & BUSINESS IMPACT
+         ============================================ -->
+    <section class="section" id="section-8">
+        <div class="container">
+            <h2>Commercial & Business Impact</h2>
+            <p class="subtitle">Total Cost of Ownership analysis</p>
+            
+            <div class="fade-in">
+                <div class="comparison-split">
+                    <div class="card">
+                        <h3 class="card-title">Warranty Comparison</h3>
+                        <div class="bar-group">
+                            <div class="bar-bg">
+                                <div class="bar-fill" data-width="100"></div>
+                            </div>
+                            <div class="text-center mt-1">
+                                <span>Sunbuster: 5 Years</span><br>
+                                <span>Collector: 5 Years</span><br>
+                                <span>Electric: 2 Years</span>
+                            </div>
+                        </div>
+                        <p><span class="check">✓</span> 150% longer than traditional electric</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">Maintenance Cost Impact</h3>
+                        <div class="viz-value">€100+/year</div>
+                        <p>Competitor annual maintenance</p>
+                        <div class="viz-value mt-2">€0/year</div>
+                        <p>Sunbuster maintenance cost</p>
+                        <p class="mt-2"><strong>10-year savings:</strong> €1,000+</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 9: TECHNOLOGY FLOW DIAGRAM
+         ============================================ -->
+    <section class="section" id="section-9">
+        <div class="container">
+            <h2>Technology Flow Diagram</h2>
+            <p class="subtitle">Direct solar accumulation process</p>
+            
+            <div class="cards-grid fade-in">
+                <div class="card">
+                    <h4 class="card-title">Solar Collection</h4>
+                    <p>Double PMMA dome creates greenhouse effect</p>
+                    <p>Black selective paint maximizes absorption</p>
+                </div>
+                
+                <div class="card">
+                    <h4 class="card-title">Direct Heating</h4>
+                    <p>Solar energy acts directly on water storage</p>
+                    <p>No intermediate heat transfer fluid</p>
+                </div>
+                
+                <div class="card">
+                    <h4 class="card-title">Heat Retention</h4>
+                    <p>45 kg/m³ polyurethane insulation</p>
+                    <p>30mm thickness minimizes heat loss</p>
+                </div>
+                
+                <div class="card">
+                    <h4 class="card-title">Efficient Backup</h4>
+                    <p>1.2 kW thermostatic backup system</p>
+                    <p>Activates only when needed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 10: COMPLETE COMPARISON MATRIX
+         ============================================ -->
+    <section class="section" id="section-10">
+        <div class="container">
+            <h2>Complete Comparison Matrix</h2>
+            <p class="subtitle">Side-by-side competitive analysis</p>
+            
+            <div class="fade-in">
+                <table class="scope-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Sunbuster (Our System)</th>
+                            <th>Solar Collector</th>
+                            <th>Traditional Electric</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Heating Method</strong></td>
+                            <td><span class="check">✓</span> Direct Solar</td>
+                            <td><span class="cross">✖</span> Indirect Solar</td>
+                            <td><span class="cross">✖</span> Direct Electrical</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Backup Power</strong></td>
+                            <td><span class="check">✓</span> 1.2 kW Efficient</td>
+                            <td><span class="cross">✖</span> 3.5 kW High-Consumption</td>
+                            <td>1.5 kW Standard</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Maintenance</strong></td>
+                            <td><span class="check">✓</span> Minimal</td>
+                            <td><span class="cross">✖</span> Annual Magnesium Rods</td>
+                            <td>Minimal</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Anti-Corrosion</strong></td>
+                            <td><span class="check">✓</span> Double Enamel / Glass</td>
+                            <td><span class="cross">✖</span> Magnesium Rod</td>
+                            <td>Enamel Polished</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Freeze Safety</strong></td>
+                            <td><span class="check">✓</span> Round Tank (Zero Risk)</td>
+                            <td><span class="cross">✖</span> High Risk</td>
+                            <td>N/A</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Warranty</strong></td>
+                            <td><span class="check">✓</span> 5 Years</td>
+                            <td>5 Years</td>
+                            <td><span class="cross">✖</span> 2 Years</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 11: ROI CALCULATOR & TECHNICAL COMPARISON
+         ============================================ -->
+    <section class="section" id="section-11">
+        <div class="container">
+            <h2>ROI Calculator & Technical Comparison</h2>
+            <p class="subtitle">Professional analysis of Sunbuster vs competing water heating systems</p>
+            
+            <div class="calculator-container fade-in">
+                <!-- Input Panel -->
+                <div class="input-panel">
+                    <h3>Input Parameters</h3>
+                    
+                    <div class="input-group">
+                        <label for="electricity-cost">Electricity Cost (€/kWh)</label>
+                        <input type="number" id="electricity-cost" value="0.25" step="0.01" min="0.01">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="daily-hours">Average Daily Backup Hours</label>
+                        <input type="number" id="daily-hours" value="2" step="0.5" min="0" max="24">
+                    </div>
+                    
+                    <h4 class="mt-3">Purchase Costs</h4>
+                    <div class="input-group">
+                        <label for="cost-sunbuster">Sunbuster DISCO Series (€)</label>
+                        <input type="number" id="cost-sunbuster" value="1925" min="0">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="cost-collector">Solar Collector System (€)</label>
+                        <input type="number" id="cost-collector" value="1800" min="0">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="cost-electric">Traditional Electric Heater (€)</label>
+                        <input type="number" id="cost-electric" value="800" min="0">
+                    </div>
+                    
+                    <h4 class="mt-3">Annual Maintenance Costs</h4>
+                    <div class="input-group">
+                        <label for="maintenance-sunbuster">Sunbuster (€/year)</label>
+                        <input type="number" id="maintenance-sunbuster" value="0" min="0" readonly style="background: #f0f8ff;">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="maintenance-collector">Solar Collector (€/year)</label>
+                        <input type="number" id="maintenance-collector" value="100" min="0">
+                        <small class="text-gray">(Magnesium rod replacement)</small>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="maintenance-electric">Traditional Electric (€/year)</label>
+                        <input type="number" id="maintenance-electric" value="50" min="0">
+                    </div>
+                    
+                    <button class="btn btn-calculate" onclick="calculateROI()">Calculate ROI</button>
+                </div>
+                
+                <!-- Results Panel -->
+                <div class="results-panel">
+                    <!-- Technical Specifications -->
+                    <h3>Technical Specifications</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th class="sunbuster-col">Sunbuster DISCO</th>
+                                <th class="collector-col">Solar Collector</th>
+                                <th class="electric-col">Traditional Electric</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Heating Method</strong></td>
+                                <td class="sunbuster-col">Direct Solar ✔</td>
+                                <td class="collector-col">Indirect Solar ✖</td>
+                                <td class="electric-col">Direct Electrical ✖</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Backup Power Rating</strong></td>
+                                <td class="sunbuster-col">1.2 kW</td>
+                                <td class="collector-col">3.5 kW</td>
+                                <td class="electric-col">1.5 kW</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tank Material</strong></td>
+                                <td class="sunbuster-col">Glass-lined Carbon Steel</td>
+                                <td class="collector-col">Enamel Coated Steel</td>
+                                <td class="electric-col">Enamel Coated Steel</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Anti-Corrosion</strong></td>
+                                <td class="sunbuster-col">Double Enamel (Maintenance-free)</td>
+                                <td class="collector-col">Magnesium Rod (Annual replacement)</td>
+                                <td class="electric-col">Standard Enamel</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Freeze Protection</strong></td>
+                                <td class="sunbuster-col">Round Tank (Zero risk)</td>
+                                <td class="collector-col">High breakage risk</td>
+                                <td class="electric-col">N/A</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Warranty</strong></td>
+                                <td class="sunbuster-col">5 Years</td>
+                                <td class="collector-col">5 Years</td>
+                                <td class="electric-col">2 Years</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- Annual Operating Costs -->
+                    <h3 class="mt-3">Annual Operating Costs</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Cost Component</th>
+                                <th class="sunbuster-col">Sunbuster DISCO</th>
+                                <th class="collector-col">Solar Collector</th>
+                                <th class="electric-col">Traditional Electric</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Electricity Consumption (kWh/year)</td>
+                                <td class="sunbuster-col" id="kwh-sunbuster">--</td>
+                                <td class="collector-col" id="kwh-collector">--</td>
+                                <td class="electric-col" id="kwh-electric">--</td>
+                            </tr>
+                            <tr>
+                                <td>Electricity Cost (€/year)</td>
+                                <td class="sunbuster-col" id="electric-cost-sunbuster">--</td>
+                                <td class="collector-col" id="electric-cost-collector">--</td>
+                                <td class="electric-col" id="electric-cost-electric">--</td>
+                            </tr>
+                            <tr>
+                                <td>Maintenance Cost (€/year)</td>
+                                <td class="sunbuster-col" id="maintenance-cost-sunbuster">€0</td>
+                                <td class="collector-col" id="maintenance-cost-collector">--</td>
+                                <td class="electric-col" id="maintenance-cost-electric">--</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td><strong>Total Annual Cost (€/year)</strong></td>
+                                <td class="sunbuster-col" id="total-cost-sunbuster">--</td>
+                                <td class="collector-col" id="total-cost-collector">--</td>
+                                <td class="electric-col" id="total-cost-electric">--</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- ROI Results -->
+                    <h3 class="mt-3">ROI Analysis</h3>
+                    <div class="results-grid">
+                        <div class="result-card sunbuster">
+                            <div class="result-label">vs Solar Collector</div>
+                            <div class="result-value" id="savings-vs-collector">--</div>
+                            <div>Annual Savings</div>
+                            <div class="mt-2">
+                                <strong>ROI Period:</strong> <span id="roi-collector">--</span> years
+                            </div>
+                        </div>
+                        
+                        <div class="result-card sunbuster">
+                            <div class="result-label">vs Traditional Electric</div>
+                            <div class="result-value" id="savings-vs-electric">--</div>
+                            <div>Annual Savings</div>
+                            <div class="mt-2">
+                                <strong>ROI Period:</strong> <span id="roi-electric">--</span> years
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- CO₂ Emissions -->
+                    <div class="co2-display">
+                        <h3>Environmental Impact</h3>
+                        <p class="mb-2">CO₂ Emissions Comparison (kg CO₂/year)</p>
+                        
+                        <div class="results-grid">
+                            <div class="result-card">
+                                <div class="result-label">Sunbuster DISCO</div>
+                                <div class="co2-value" id="co2-sunbuster">--</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-label">Solar Collector</div>
+                                <div class="co2-value" id="co2-collector">--</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-label">Traditional Electric</div>
+                                <div class="co2-value" id="co2-electric">--</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <strong>Annual CO₂ Savings:</strong>
+                            <span id="co2-savings-collector">--</span> kg vs Solar Collector |
+                            <span id="co2-savings-electric">--</span> kg vs Traditional Electric
+                        </div>
+                    </div>
+                    
+                    <!-- Executive Summary -->
+                    <div class="executive-summary">
+                        <h3>Executive Summary</h3>
+                        
+                        <div class="summary-point">
+                            <div class="summary-icon">€</div>
+                            <div>
+                                <strong>Lower Operating Cost</strong>
+                                <p>Sunbuster's 1.2 kW backup system consumes 65% less power than solar collectors and offers substantial electricity savings compared to traditional electric heaters, delivering immediate operational cost reductions.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-point">
+                            <div class="summary-icon">🔧</div>
+                            <div>
+                                <strong>Maintenance Advantage</strong>
+                                <p>With zero annual maintenance requirements and no sacrificial parts to replace, Sunbuster eliminates the recurring €100+ annual costs associated with magnesium rod replacement in solar collector systems.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-point">
+                            <div class="summary-icon">📈</div>
+                            <div>
+                                <strong>Faster Payback Period</strong>
+                                <p>The combination of lower electricity consumption and elimination of maintenance expenses ensures a rapid return on investment, typically achieving payback within <span id="summary-payback">--</span> years compared to alternative systems.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-point">
+                            <div class="summary-icon">🌱</div>
+                            <div>
+                                <strong>Environmental Leadership</strong>
+                                <p>By minimizing electrical grid dependency and utilizing the most efficient backup system available, Sunbuster reduces CO₂ emissions by approximately <span id="summary-co2-savings">--</span> kg annually compared to traditional solar collectors.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 12: CO₂ EMISSIONS & ENVIRONMENTAL IMPACT
+         ============================================ -->
+    <section class="section environment-section" id="section-12">
+        <div class="container">
+            <h2>CO₂ Emissions & Environmental Impact</h2>
+            <p class="subtitle">Lowest carbon footprint in the category</p>
+            
+            <div class="fade-in">
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3 class="card-title text-environment">Sunbuster DISCO</h3>
+                        <p class="text-environment"><strong>Lowest Footprint</strong></p>
+                        <p>Priority Solar + 1.2 kW Backup</p>
+                        <div class="viz-value mt-2">65%</div>
+                        <p>Less backup power than collectors</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title text-warning">Solar Collector</h3>
+                        <p class="text-warning"><strong>Medium Footprint</strong></p>
+                        <p>Priority Solar + 3.5 kW Backup</p>
+                        <div class="viz-value mt-2">291%</div>
+                        <p>More backup power than Sunbuster</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title text-danger">Traditional Electric</h3>
+                        <p class="text-danger"><strong>Highest Footprint</strong></p>
+                        <p>100% Electrical Dependence</p>
+                        <div class="viz-value mt-2">1.5 kW</div>
+                        <p>Constant per-hour consumption</p>
+                    </div>
+                </div>
+                
+                <div class="bar-group mt-3">
+                    <div class="bar-label">
+                        <span>Relative CO₂ Footprint Comparison</span>
+                    </div>
+                    <div class="bar-bg">
+                        <div class="bar-fill environment" data-width="25" style="width: 25%">Sunbuster</div>
+                        <div class="bar-fill warning" data-width="50" style="width: 50%; position: absolute; top: 0; left: 25%;">Collector</div>
+                        <div class="bar-fill danger" data-width="100" style="width: 100%; position: absolute; top: 0; left: 0; opacity: 0.3">Electric</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SECTION 13: EXECUTIVE SUMMARY
+         ============================================ -->
+    <section class="section" id="section-13">
+        <div class="container">
+            <div class="fade-in">
+                <h2>Executive Summary</h2>
+                
+                <div class="card">
+                    <h3 class="card-title">Technical Verdict</h3>
+                    <p>The Sunbuster series represents a superior thermal enclosure engineering approach. By integrating the double PMMA greenhouse dome and high-density (45 kg/m³) insulation, the system ensures maximum heat absorption with minimal night heat loss. Its round tank design is a unique technical advantage that protects against freezing and high-pressure failure.</p>
+                    
+                    <h3 class="card-title mt-3">Business Verdict</h3>
+                    <p>From a Total Cost of Ownership (TCO) perspective, Sunbuster is the only professional choice. It eliminates the mandatory annual maintenance expenses associated with solar collectors and consumes nearly 3x less backup power (1.2 kW vs 3.5 kW) during low-radiation periods, ensuring rapid ROI for hotel investors.</p>
+                    
+                    <h3 class="card-title mt-3">Environmental Verdict (CO₂ Focus)</h3>
+                    <p>Sunbuster offers the highest CO₂ reduction potential in the category. By minimizing dependency on the electrical grid and utilizing the most efficient backup system available (1.2 kW), it significantly lowers the carbon footprint of hospitality facilities compared to traditional or larger solar systems.</p>
+                    
+                    <h3 class="card-title mt-3">Why Our Solution Wins</h3>
+                    <p>Our solution wins by being the only system that provides maintenance-free anti-corrosion, structural wind safety, and anti-freeze security in one compact, certified package. With a 5-year warranty—150% longer than traditional units—it is the most reliable investment for long-term hot water infrastructure.</p>
+                    
+                    <div class="text-center mt-3">
+                        <a href="#section-1" class="btn">Back to Top</a>
+                        <button class="btn btn-outline ml-2" onclick="window.print()">Print Summary</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         JAVASCRIPT STRUCTURE
+         ============================================ -->
+    <script>
+        // A) SCROLL-BASED ENGINE
+        class ScrollEngine {
+            constructor() {
+                this.observer = new IntersectionObserver(
+                    this.handleIntersection.bind(this),
+                    { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
+                );
+                this.navDots = document.querySelectorAll('.dot');
+                this.sections = document.querySelectorAll('.section');
+                this.currentSection = 1;
+            }
+            
+            init() {
+                // Observe all fade-in elements
+                document.querySelectorAll('.fade-in').forEach(el => {
+                    this.observer.observe(el);
+                });
+                
+                // Setup navigation dots
+                this.setupNavigation();
+                
+                // Initialize bar animations
+                this.initBarAnimations();
+            }
+            
+            handleIntersection(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        // Animate bars in this section
+                        this.animateBarsInSection(entry.target);
+                        
+                        // Update navigation dots
+                        this.updateNavigation(entry.target);
+                    }
+                });
+            }
+            
+            animateBarsInSection(section) {
+                const bars = section.querySelectorAll('.bar-fill');
+                bars.forEach(bar => {
+                    const width = bar.getAttribute('data-width');
+                    if (width && !bar.classList.contains('animated')) {
+                        setTimeout(() => {
+                            bar.style.width = width + '%';
+                            bar.classList.add('animated');
+                        }, 300);
+                    }
+                });
+            }
+            
+            initBarAnimations() {
+                document.querySelectorAll('.bar-fill').forEach(bar => {
+                    const width = bar.getAttribute('data-width');
+                    if (width) {
+                        bar.style.width = '0%';
+                    }
+                });
+            }
+            
+            setupNavigation() {
+                this.navDots.forEach(dot => {
+                    dot.addEventListener('click', (e) => {
+                        const sectionId = `section-${e.target.dataset.section}`;
+                        document.getElementById(sectionId).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    });
+                });
+            }
+            
+            updateNavigation(section) {
+                const sectionId = section.id;
+                const sectionNumber = parseInt(sectionId.split('-')[1]);
+                
+                this.navDots.forEach(dot => {
+                    dot.classList.remove('active');
+                    if (parseInt(dot.dataset.section) === sectionNumber) {
+                        dot.classList.add('active');
+                    }
+                });
+                
+                this.currentSection = sectionNumber;
+            }
+        }
+        
+        // B) ROI CALCULATOR ENGINE
+        class ROICalculator {
+            constructor() {
+                this.GRID_CO2_FACTOR = 0.233; // kg CO₂ per kWh (EU average)
+                this.DAYS_PER_YEAR = 365;
+                this.initializeInputs();
+                this.setupEventListeners();
+                this.calculate(); // Initial calculation
+            }
+            
+            initializeInputs() {
+                // Set default values
+                document.getElementById('electricity-cost').value = 0.25;
+                document.getElementById('daily-hours').value = 2;
+                document.getElementById('cost-sunbuster').value = 1925;
+                document.getElementById('cost-collector').value = 1800;
+                document.getElementById('cost-electric').value = 800;
+                document.getElementById('maintenance-sunbuster').value = 0;
+                document.getElementById('maintenance-collector').value = 100;
+                document.getElementById('maintenance-electric').value = 50;
+            }
+            
+            setupEventListeners() {
+                // Real-time calculation on input change
+                const inputs = document.querySelectorAll('.input-panel input');
+                inputs.forEach(input => {
+                    input.addEventListener('input', () => this.calculate());
+                });
+            }
+            
+            calculate() {
+                // Get user inputs
+                const inputs = this.getInputs();
+                
+                // Calculate annual energy consumption
+                const energy = this.calculateEnergyConsumption(inputs);
+                
+                // Calculate annual costs
+                const costs = this.calculateAnnualCosts(inputs, energy);
+                
+                // Calculate ROI and savings
+                const roi = this.calculateROI(inputs, costs);
+                
+                // Calculate CO₂ emissions
+                const emissions = this.calculateCO2Emissions(energy);
+                
+                // Update UI
+                this.updateResults(inputs, energy, costs, roi, emissions);
+                this.updateSummary(roi, emissions);
+            }
+            
+            getInputs() {
+                return {
+                    electricityCost: parseFloat(document.getElementById('electricity-cost').value) || 0.25,
+                    dailyHours: parseFloat(document.getElementById('daily-hours').value) || 2,
+                    
+                    purchaseCosts: {
+                        sunbuster: parseFloat(document.getElementById('cost-sunbuster').value) || 1925,
+                        collector: parseFloat(document.getElementById('cost-collector').value) || 1800,
+                        electric: parseFloat(document.getElementById('cost-electric').value) || 800
+                    },
+                    
+                    maintenanceCosts: {
+                        sunbuster: parseFloat(document.getElementById('maintenance-sunbuster').value) || 0,
+                        collector: parseFloat(document.getElementById('maintenance-collector').value) || 100,
+                        electric: parseFloat(document.getElementById('maintenance-electric').value) || 50
+                    }
+                };
+            }
+            
+            calculateEnergyConsumption(inputs) {
+                const annualHours = inputs.dailyHours * this.DAYS_PER_YEAR;
+                
+                return {
+                    sunbuster: 1.2 * annualHours, // 1.2 kW backup
+                    collector: 3.5 * annualHours, // 3.5 kW backup
+                    electric: 1.5 * annualHours   // 1.5 kW backup
+                };
+            }
+            
+            calculateAnnualCosts(inputs, energy) {
+                const results = {};
+                
+                ['sunbuster', 'collector', 'electric'].forEach(system => {
+                    const electricityCost = energy[system] * inputs.electricityCost;
+                    const maintenanceCost = inputs.maintenanceCosts[system];
+                    const totalCost = electricityCost + maintenanceCost;
+                    
+                    results[system] = {
+                        energyKwh: energy[system],
+                        electricityCost: electricityCost,
+                        maintenanceCost: maintenanceCost,
+                        totalCost: totalCost
+                    };
+                });
+                
+                return results;
+            }
+            
+            calculateROI(inputs, costs) {
+                const priceDiffCollector = inputs.purchaseCosts.sunbuster - inputs.purchaseCosts.collector;
+                const priceDiffElectric = inputs.purchaseCosts.sunbuster - inputs.purchaseCosts.electric;
+                
+                const savingsVsCollector = costs.collector.totalCost - costs.sunbuster.totalCost;
+                const savingsVsElectric = costs.electric.totalCost - costs.sunbuster.totalCost;
+                
+                const roiCollector = priceDiffCollector > 0 ? 
+                    priceDiffCollector / savingsVsCollector : 
+                    0;
+                    
+                const roiElectric = priceDiffElectric > 0 ? 
+                    priceDiffElectric / savingsVsElectric : 
+                    0;
+                
+                return {
+                    savingsVsCollector: savingsVsCollector,
+                    savingsVsElectric: savingsVsElectric,
+                    roiCollector: roiCollector,
+                    roiElectric: roiElectric,
+                    priceDiffCollector: priceDiffCollector,
+                    priceDiffElectric: priceDiffElectric
+                };
+            }
+            
+            calculateCO2Emissions(energy) {
+                const results = {};
+                
+                ['sunbuster', 'collector', 'electric'].forEach(system => {
+                    results[system] = energy[system] * this.GRID_CO2_FACTOR;
+                });
+                
+                results.savingsVsCollector = results.collector - results.sunbuster;
+                results.savingsVsElectric = results.electric - results.sunbuster;
+                
+                return results;
+            }
+            
+            updateResults(inputs, energy, costs, roi, emissions) {
+                // Format currency
+                const formatCurrency = (value) => `€${value.toFixed(2)}`;
+                const formatNumber = (value, decimals = 0) => value.toFixed(decimals);
+                
+                // Update energy consumption
+                document.getElementById('kwh-sunbuster').textContent = formatNumber(energy.sunbuster, 0);
+                document.getElementById('kwh-collector').textContent = formatNumber(energy.collector, 0);
+                document.getElementById('kwh-electric').textContent = formatNumber(energy.electric, 0);
+                
+                // Update electricity costs
+                document.getElementById('electric-cost-sunbuster').textContent = formatCurrency(costs.sunbuster.electricityCost);
+                document.getElementById('electric-cost-collector').textContent = formatCurrency(costs.collector.electricityCost);
+                document.getElementById('electric-cost-electric').textContent = formatCurrency(costs.electric.electricityCost);
+                
+                // Update maintenance costs
+                document.getElementById('maintenance-cost-sunbuster').textContent = formatCurrency(costs.sunbuster.maintenanceCost);
+                document.getElementById('maintenance-cost-collector').textContent = formatCurrency(costs.collector.maintenanceCost);
+                document.getElementById('maintenance-cost-electric').textContent = formatCurrency(costs.electric.maintenanceCost);
+                
+                // Update total costs
+                document.getElementById('total-cost-sunbuster').textContent = formatCurrency(costs.sunbuster.totalCost);
+                document.getElementById('total-cost-collector').textContent = formatCurrency(costs.collector.totalCost);
+                document.getElementById('total-cost-electric').textContent = formatCurrency(costs.electric.totalCost);
+                
+                // Update ROI results
+                document.getElementById('savings-vs-collector').textContent = formatCurrency(roi.savingsVsCollector);
+                document.getElementById('savings-vs-electric').textContent = formatCurrency(roi.savingsVsElectric);
+                
+                document.getElementById('roi-collector').textContent = roi.roiCollector > 0 ? 
+                    roi.roiCollector.toFixed(1) : "Immediate";
+                document.getElementById('roi-electric').textContent = roi.roiElectric > 0 ? 
+                    roi.roiElectric.toFixed(1) : "Immediate";
+                
+                // Update CO₂ emissions
+                document.getElementById('co2-sunbuster').textContent = formatNumber(emissions.sunbuster, 0);
+                document.getElementById('co2-collector').textContent = formatNumber(emissions.collector, 0);
+                document.getElementById('co2-electric').textContent = formatNumber(emissions.electric, 0);
+                
+                document.getElementById('co2-savings-collector').textContent = formatNumber(emissions.savingsVsCollector, 0);
+                document.getElementById('co2-savings-electric').textContent = formatNumber(emissions.savingsVsElectric, 0);
+            }
+            
+            updateSummary(roi, emissions) {
+                // Find the best (shortest) payback period
+                const paybackCollector = roi.roiCollector > 0 ? roi.roiCollector : 0;
+                const paybackElectric = roi.roiElectric > 0 ? roi.roiElectric : 0;
+                
+                let bestPayback = "Immediate";
+                if (paybackCollector > 0 && paybackElectric > 0) {
+                    bestPayback = Math.min(paybackCollector, paybackElectric).toFixed(1);
+                } else if (paybackCollector > 0) {
+                    bestPayback = paybackCollector.toFixed(1);
+                } else if (paybackElectric > 0) {
+                    bestPayback = paybackElectric.toFixed(1);
+                }
+                
+                document.getElementById('summary-payback').textContent = bestPayback;
+                document.getElementById('summary-co2-savings').textContent = emissions.savingsVsCollector.toFixed(0);
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize scroll engine
+            const scrollEngine = new ScrollEngine();
+            scrollEngine.init();
+            
+            // Initialize ROI calculator
+            const calculator = new ROICalculator();
+            
+            // Expose calculate function to button
+            window.calculateROI = () => calculator.calculate();
+            
+            // Add print functionality
+            document.querySelector('button[onclick="window.print()"]').addEventListener('click', (e) => {
+                e.preventDefault();
+                window.print();
+            });
+        });
+    </script>
+</body>
+</html>
